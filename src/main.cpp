@@ -133,7 +133,7 @@ int main() {
           vector<double> next_y_vals;
 
           double poly_inc = 2.5;
-          int num_points 25;
+          int num_points = 25;
           for (int i=1; i<num_points; i++)
           {
         	  next_x_vals.push_back(poly_inc*i);
