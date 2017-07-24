@@ -161,15 +161,24 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
     vars[i] = 0;
   }
 
+
+  double x = state[0];
+  double y = state[1];
+  double psi = state[2];
+  double v = state[3];
+  double cte = state[4];
+  double epsi = state[5];
+
+
   // Set the initial variable values
-  /*
+
   vars[x_start] = x;
   vars[y_start] = y;
   vars[psi_start] = psi;
   vars[v_start] = v;
   vars[cte_start] = cte;
   vars[epsi_start] = epsi;
-  */
+
   // Lower and upper limits for the constraints
   // Should be 0 besides initial state.
   // Lower and upper limits for x
@@ -270,7 +279,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   result.push_back(solution.x[delta_start]);
   result.push_back(solution.x[a_start]);
 
-  for(int i = 0; i < N; i++)
+  for(int t = 0; t < N; t++)
   {
 	  result.push_back(solution.x[x_start + t + 1]);
 	  result.push_back(solution.x[y_start + t + 1]);
