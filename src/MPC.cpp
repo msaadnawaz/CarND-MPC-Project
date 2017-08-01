@@ -126,10 +126,10 @@ class FG_eval {
 	      // epsi[t+1] = psi[t] - psides[t] + v[t] * delta[t] / Lf * dt
 	      fg[2 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
 	      fg[2 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
-	      fg[2 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
+	      fg[2 + psi_start + t] = psi1 - (psi0 - v0 * delta0 / Lf * dt);
 	      fg[2 + v_start + t] = v1 - (v0 + a0 * dt);
 	      fg[2 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
-	      fg[2 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);
+	      fg[2 + epsi_start + t] = epsi1 - ((psi0 - psides0) - v0 * delta0 / Lf * dt);
 	    }
 	}
 };
@@ -172,12 +172,12 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 
   // Set the initial variable values
 
-//  vars[x_start] = x;
-//  vars[y_start] = y;
-//  vars[psi_start] = psi;
-//  vars[v_start] = v;
-//  vars[cte_start] = cte;
-//  vars[epsi_start] = epsi;
+  vars[x_start] = x;
+  vars[y_start] = y;
+  vars[psi_start] = psi;
+  vars[v_start] = v;
+  vars[cte_start] = cte;
+  vars[epsi_start] = epsi;
 
   // Lower and upper limits for the constraints
   // Should be 0 besides initial state.
@@ -279,7 +279,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   result.push_back(solution.x[delta_start]);
   result.push_back(solution.x[a_start]);
 
-  for(int t = 0; t < N; t++)
+  for(int t = 0; t < N-1; t++)
   {
 	  result.push_back(solution.x[x_start + t + 1]);
 	  result.push_back(solution.x[y_start + t + 1]);

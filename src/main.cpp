@@ -105,7 +105,7 @@ int main() {
         	  double shift_y = ptsy[i]-py;
 
         	  ptsx[i] = (shift_x * cos(0-psi) - shift_y * sin(0-psi));
-        	  ptsy[i] = (shift_x * sin(0-psi) - shift_y * cos(0-psi));
+        	  ptsy[i] = (shift_x * sin(0-psi) + shift_y * cos(0-psi));
           }
 
           double* ptrx = &ptsx[0];
@@ -122,13 +122,13 @@ int main() {
           //double epsi = psi - atan(coeffs[1] + 2 * px * coeffs[2] + 3 * coeffs[3] * pow(px,2);
           double epsi = -atan(coeffs[1]);
 
-          double steer_value = j[1]["steering_angle"];
-          double throttle_value = j[1]["throttle"];
-
           Eigen::VectorXd state(6);
           state << 0, 0, 0, v, cte, epsi;
 
           auto vars = mpc.Solve(state, coeffs);
+
+          double steer_value = vars[0]/(deg2rad(25)*Lf);
+          double throttle_value = vars[1];
 
           //Display the waypoints/reference line
           vector<double> next_x_vals;
@@ -162,8 +162,8 @@ int main() {
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
           // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-          msgJson["steering_angle"] = vars[0]/deg2rad(25)*Lf;
-          msgJson["throttle"] = vars[1];
+          msgJson["steering_angle"] = steer_value;
+          msgJson["throttle"] = throttle_value;
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Green line
