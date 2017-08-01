@@ -23,7 +23,7 @@ const double Lf = 2.67;
 
 double ref_cte = 0;
 double ref_epsi = 0;
-double ref_v = 100;
+double ref_v = 40;
 
 // The solver takes all the state variables and actuator
 // variables in a singular vector. Thus, we should to establish
@@ -203,8 +203,8 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // Acceleration/decceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
   for (int i = a_start; i < n_vars; i++) {
-    vars_lowerbound[i] = -5.0;
-    vars_upperbound[i] = 5.0;
+    vars_lowerbound[i] = -1.0;
+    vars_upperbound[i] = 1.0;
   }
 
   // Lower and upper limits for constraints
