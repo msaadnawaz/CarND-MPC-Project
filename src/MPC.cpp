@@ -61,8 +61,8 @@ class FG_eval {
 
 	  // Minimize the use of actuators.
 	  for (int t = 0; t < N - 1; t++) {
-		  fg[0] += CppAD::pow(vars[delta_start + t], 2);
-	      fg[0] += CppAD::pow(vars[a_start + t], 2);
+		  fg[0] += 5 * CppAD::pow(vars[delta_start + t], 2);
+	      fg[0] += 5 * CppAD::pow(vars[a_start + t], 2);
 	  }
 
 	  // Minimize the value gap between sequential actuations.
@@ -90,7 +90,7 @@ class FG_eval {
 	    fg[1 + epsi_start] = vars[epsi_start];
 
 	    // The rest of the constraints
-	    for (int t = 1; t < N; t++) {
+	    for (int t = 1; t < N - 1; t++) {
 	      // The state at time t+1 .
 	      AD<double> x1 = vars[x_start + t + 1];
 	      AD<double> y1 = vars[y_start + t + 1];
