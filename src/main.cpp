@@ -111,11 +111,13 @@ int main() {
           double* ptrx = &ptsx[0];
           double*ptry = &ptsy[0];
 
+          //convert to VectorXd
           Eigen::Map<Eigen::VectorXd> ptsx_transform(ptrx, 6);
           Eigen::Map<Eigen::VectorXd> ptsy_transform(ptry, 6);
 
           auto coeffs = polyfit(ptsx_transform, ptsy_transform, 3);
 
+          //calculate current cte and epsi
           double cte = polyeval(coeffs, 0);
           //double epsi = psi - atan(coeffs[1] + 2 * px * coeffs[2] + 3 * coeffs[3] * pow(px,2);
           double epsi = -atan(coeffs[1]);
@@ -160,8 +162,8 @@ int main() {
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
           // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-          msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = throttle_value;
+          msgJson["steering_angle"] = vars[0]/deg2rad(25)*Lf;
+          msgJson["throttle"] = vars[1];
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Green line
