@@ -56,7 +56,7 @@ class FG_eval {
 	  for (int t = 0; t < N; t++) {
 		  fg[0] += 2000 * CppAD::pow(vars[cte_start + t] - ref_cte, 2);
 	      fg[0] += 2000 * CppAD::pow(vars[epsi_start + t] - ref_epsi, 2);
-	      fg[0] += 500 * CppAD::pow(vars[v_start + t] - ref_v, 2);
+	      fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
 	  }
 
 	  // Minimize the use of actuators.
@@ -171,7 +171,6 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 
 
   // Set the initial variable values
-
   vars[x_start] = x;
   vars[y_start] = y;
   vars[psi_start] = psi;
@@ -251,7 +250,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   options += "Sparse  true        reverse\n";
   // NOTE: Currently the solver has a maximum time limit of 0.5 seconds.
   // Change this as you see fit.
-  options += "Numeric max_cpu_time          0.5\n";
+  options += "Numeric max_cpu_time          0.1\n";
 
   // place to return solution
   CppAD::ipopt::solve_result<Dvector> solution;
