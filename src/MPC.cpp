@@ -50,7 +50,7 @@ class FG_eval {
     // NOTE: You'll probably go back and forth between this function and
     // the Solver function below.
 
-	  fg[0] = 0;
+	  fg[0] = 0.0;
 
 	  // The part of the cost based on the reference state.
 	  for (int t = 0; t < N; t++) {
@@ -247,7 +247,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // if you uncomment both the computation time should go up in orders of
   // magnitude.
   options += "Sparse  true        forward\n";
-  options += "Sparse  true        reverse\n";
+  //options += "Sparse  true        reverse\n";
   // NOTE: Currently the solver has a maximum time limit of 0.5 seconds.
   // Change this as you see fit.
   options += "Numeric max_cpu_time          0.5\n";
