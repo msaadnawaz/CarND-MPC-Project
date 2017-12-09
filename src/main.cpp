@@ -92,10 +92,17 @@ int main() {
 					double py = j[1]["y"];
 					double psi = j[1]["psi"];
 					double v = j[1]["speed"];
+					double steer_value = j[1]["steering_angle"];
+					double throttle_value = j[1]["throttle"];
 
 					//Delayed state
-					//to be added later
+					double Lf = 2.67;
+					double delay = 100;
 
+					double delayed_px = px + v * cos(psi) * delay/1000;
+					double delayed_py = py + v * sin(psi) * delay/1000;
+					double delayed_psi = psi + (v * tan(-steer_value) / Lf) * delay/1000 + ( (a * tan(-steer_value) / (2*Lf)) * pow(delay/1000,2));
+					double delayed_v = v + throttle * 5 * delay/1000;
 					/*
 					 * TODO: Calculate steering angle and throttle using MPC.
 					 *
@@ -105,11 +112,11 @@ int main() {
 					for (int i=0; i<ptsx.size(); i++)
 					{
 						//shift car reference angle to 90 degrees
-						double shift_x = ptsx[i]-px;
-						double shift_y = ptsy[i]-py;
+						double shift_x = ptsx[i]-delayed_px;
+						double shift_y = ptsy[i]-delayed_py;
 
-						ptsx[i] = (shift_x * cos(0-psi) - shift_y * sin(0-psi));
-						ptsy[i] = (shift_x * sin(0-psi) + shift_y * cos(0-psi));
+						ptsx[i] = (shift_x * cos(0-delayed_psi) - shift_y * sin(0-delayed_psi));
+						ptsy[i] = (shift_x * sin(0-delayed_psi) + shift_y * cos(0-delayed_psi));
 					}
 
 					double* ptrx = &ptsx[0];
@@ -127,16 +134,13 @@ int main() {
 					double epsi = -atan(coeffs[1]);
 
 					Eigen::VectorXd state(6);
-					state << 0, 0, 0, v, cte, epsi;
+					state << 0, 0, 0, delayed_v, cte, epsi;
 
 					auto vars = mpc.Solve(state, coeffs);
 
-					double Lf = 2.67;
-
 					//double steer_value = vars[0]/(deg2rad(25)*Lf);
 					//double throttle_value = vars[1];
-					double steer_value = j[1]["steering_angle"];
-					double throttle_value = j[1]["throttle"];
+
 
 					//Display the waypoints/reference line
 					vector<double> next_x_vals;
