@@ -101,8 +101,8 @@ int main() {
 
 					double delayed_px = px + v * cos(psi) * delay/1000;
 					double delayed_py = py + v * sin(psi) * delay/1000;
-					double delayed_psi = psi + (v * tan(-steer_value) / Lf) * delay/1000 + ( (a * tan(-steer_value) / (2*Lf)) * pow(delay/1000,2));
-					double delayed_v = v + throttle * 5 * delay/1000;
+					double delayed_psi = psi + (v * tan(-steer_value) / Lf) * delay/1000 + ( (throttle_value * 5 * tan(-steer_value) / (2*Lf)) * pow(delay/1000,2));
+					double delayed_v = v + throttle_value * 5 * delay/1000;
 					/*
 					 * TODO: Calculate steering angle and throttle using MPC.
 					 *
