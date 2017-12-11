@@ -66,7 +66,7 @@ public:
 		for (t = 0; t < N - 1; t++) {
 			fg[0] += 5 * CppAD::pow(vars[delta_start + t], 2);
 			fg[0] += 5 * CppAD::pow(vars[a_start + t], 2);
-			fg[0] += 1000 * CppAD::pow(vars[delta_start+t]*vars[v_start+t],2);
+			fg[0] += 2000 * CppAD::pow(vars[delta_start+t]*vars[v_start+t],2);
 		}
 
 		// Minimize the value gap between sequential actuations.
@@ -252,7 +252,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 	// if you uncomment both the computation time should go up in orders of
 	// magnitude.
 	options += "Sparse  true        forward\n";
-	options += "Sparse  true        reverse\n";
+	//options += "Sparse  true        reverse\n";
 	// NOTE: Currently the solver has a maximum time limit of 0.5 seconds.
 	// Change this as you see fit.
 	options += "Numeric max_cpu_time          0.5\n";
@@ -270,7 +270,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 
 	// Cost
 	auto cost = solution.obj_value;
-	std::cout << "Cost " << cost << std::endl;
+	std::cout << "\nCost " << cost << std::endl;
 
 	// TODO: Return the first actuator values. The variables can be accessed with
 	// `solution.x[i]`.
