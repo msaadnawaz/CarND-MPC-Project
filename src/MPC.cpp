@@ -66,7 +66,7 @@ public:
 		for (t = 0; t < N - 1; t++) {
 			fg[0] += 5 * CppAD::pow(vars[delta_start + t], 2);
 			fg[0] += 5 * CppAD::pow(vars[a_start + t], 2);
-			fg[0] += 2000 * CppAD::pow(vars[delta_start+t]*vars[v_start+t],2);
+			//fg[0] += 2000 * CppAD::pow(vars[delta_start+t]*vars[v_start+t],2);
 		}
 
 		// Minimize the value gap between sequential actuations.
