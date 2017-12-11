@@ -7,7 +7,7 @@ using CppAD::AD;
 
 // TODO: Set the timestep length and duration
 size_t N = 10;
-double dt = 0.3;
+double dt = 0.2;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -147,7 +147,7 @@ MPC::~MPC() {}
 
 vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 	bool ok = true;
-	size_t i;
+	size_t t;
 	typedef CPPAD_TESTVECTOR(double) Dvector;
 
 	// TODO: Set the number of model variables (includes both states and inputs).
