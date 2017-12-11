@@ -111,10 +111,10 @@ public:
 			// Only consider the actuation at time t.
 			AD<double> delta0 = vars[delta_start + t];
 			AD<double> a0 = vars[a_start + t];
-//			if(t>0){
-//				a0 = vars[a_start + t - 1];
-//				delta0 = vars[delta_start + t - 1];
-//			}
+			if(t>0){
+				a0 = vars[a_start + t - 1];
+				delta0 = vars[delta_start + t - 1];
+			}
 
 			AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * x0 * x0 + coeffs[3] * x0 * x0 * x0;
 			AD<double> psides0 = CppAD::atan(coeffs[1] + 2* coeffs[2] * x0 + 3 * coeffs[3] * x0 * x0);
