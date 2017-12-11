@@ -49,28 +49,28 @@ public:
 		// `fg` a vector of the cost constraints, `vars` is a vector of variable values (state & actuators)
 		// NOTE: You'll probably go back and forth between this function and
 		// the Solver function below.
-
+		size_t t;
 		fg[0] = 0.0;
 
 		//***************************
 		// Cost calculation
 		//***************************
 		// The part of the cost based on the reference state.
-		for (int t = 0; t < N; t++) {
+		for (t = 0; t < N; t++) {
 			fg[0] += 2000 * CppAD::pow(vars[cte_start + t] - ref_cte, 2);
 			fg[0] += 2000 * CppAD::pow(vars[epsi_start + t] - ref_epsi, 2);
 			fg[0] += 1 * CppAD::pow(vars[v_start + t] - ref_v, 2);
 		}
 
 		// Minimize the use of actuators.
-		for (int t = 0; t < N - 1; t++) {
+		for (t = 0; t < N - 1; t++) {
 			fg[0] += 5 * CppAD::pow(vars[delta_start + t], 2);
 			fg[0] += 5 * CppAD::pow(vars[a_start + t], 2);
-			fg[0] += 700*CppAD::pow(vars[delta_start+t]*vars[v_start+t],2);
+			fg[0] += 1000 * CppAD::pow(vars[delta_start+t]*vars[v_start+t],2);
 		}
 
 		// Minimize the value gap between sequential actuations.
-		for (int t = 0; t < N - 2; t++) {
+		for (t = 0; t < N - 2; t++) {
 			fg[0] += 200 * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
 			fg[0] += 10 * CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
 		}
@@ -91,7 +91,7 @@ public:
 		fg[1 + epsi_start] = vars[epsi_start];
 
 		// The rest of the constraints
-		for (int t = 0; t < N - 1; t++) {
+		for (t = 0; t < N - 1; t++) {
 			// The state at time t+1 .
 			AD<double> x1 = vars[x_start + t + 1];
 			AD<double> y1 = vars[y_start + t + 1];
@@ -111,7 +111,8 @@ public:
 			// Only consider the actuation at time t.
 			AD<double> delta0 = vars[delta_start + t];
 			AD<double> a0 = vars[a_start + t];
-			if(t>0){
+			// actuation at time t-1 for latency consideration
+			if(t > 0){
 				a0 = vars[a_start + t - 1];
 				delta0 = vars[delta_start + t - 1];
 			}
