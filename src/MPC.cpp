@@ -7,7 +7,7 @@ using CppAD::AD;
 
 // TODO: Set the timestep length and duration
 size_t N = 10;
-double dt = 0.2;
+double dt = 0.1;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -147,7 +147,7 @@ MPC::~MPC() {}
 
 vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 	bool ok = true;
-	size_t t;
+	size_t i, t;
 	typedef CPPAD_TESTVECTOR(double) Dvector;
 
 	// TODO: Set the number of model variables (includes both states and inputs).
@@ -162,7 +162,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 	// Initial value of the independent variables.
 	// SHOULD BE 0 besides initial state.
 	Dvector vars(n_vars);
-	for (int i = 0; i < n_vars; i++) {
+	for (i = 0; i < n_vars; i++) {
 		vars[i] = 0;
 	}
 
@@ -190,7 +190,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 
 	// Set all non-actuators upper and lowerlimits
 	// to the max negative and positive values.
-	for (int i = 0; i < delta_start; i++) {
+	for (i = 0; i < delta_start; i++) {
 		vars_lowerbound[i] = -1.0e19;
 		vars_upperbound[i] = 1.0e19;
 	}
@@ -198,14 +198,14 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 	// The upper and lower limits of delta are set to -25 and 25
 	// degrees (values in radians).
 	// NOTE: Feel free to change this to something else.
-	for (int i = delta_start; i < a_start; i++) {
+	for (i = delta_start; i < a_start; i++) {
 		vars_lowerbound[i] = -0.436332 * Lf;
 		vars_upperbound[i] = 0.436332 * Lf;
 	}
 
 	// Acceleration/decceleration upper and lower limits.
 	// NOTE: Feel free to change this to something else.
-	for (int i = a_start; i < n_vars; i++) {
+	for (i = a_start; i < n_vars; i++) {
 		vars_lowerbound[i] = -1.0;
 		vars_upperbound[i] = 1.0;
 	}
@@ -216,7 +216,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 	Dvector constraints_lowerbound(n_constraints);
 	Dvector constraints_upperbound(n_constraints);
 
-	for (int i = 0; i < n_constraints; i++) {
+	for (i = 0; i < n_constraints; i++) {
 		constraints_lowerbound[i] = 0;
 		constraints_upperbound[i] = 0;
 	}
@@ -282,7 +282,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 	result.push_back(solution.x[delta_start]);
 	result.push_back(solution.x[a_start]);
 
-	for(int t = 0; t < N-1; t++)
+	for(t = 0; t < N-1; t++)
 	{
 		result.push_back(solution.x[x_start + t + 1]);
 		result.push_back(solution.x[y_start + t + 1]);
